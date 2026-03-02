@@ -67,7 +67,21 @@ FIXED uses stable section-based references ("Section 7b"). STREAMLINED/new_versi
 
 FIXED provides nuanced biological interpretation. STREAMLINED/new_version use overly alarmist language.
 
-## One Issue in FIXED
+## Shared Bug Across All Three Notebooks
+
+### Cell 151 `load_results` uses wrong tuple element (commented-out code)
+
+The commented-out reload code in cell 151 (Section 11b) uses:
+```python
+expected_methods=[k for k, *_ in coupling_analyses]
+```
+This extracts method names (`'SW'`, `'Jaccard'`, `'Weinreb'`) instead of the dict keys (`'SW_weighted'`, `'Jaccard_binary'`, `'Weinreb_weighted'`). If uncommented, `validate_results()` would raise a `ValueError`. The correct expression should be:
+```python
+expected_methods=[k for _, _, k, _ in coupling_analyses]
+```
+This bug is present in **all three notebooks**.
+
+## Issues in FIXED
 
 **Cell 122 indentation bug**: The `try:` keyword is at column 0 instead of 4-space indent, breaking out of the `else:` block. Only manifests when fewer than 3 cell types survive the stringent filter (edge case).
 
